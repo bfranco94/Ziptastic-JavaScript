@@ -30,17 +30,20 @@
 	function makeRequest(url){
 		
 		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.setRequestHeader(Authorization: Basic, "88ad38789b858209141ac5699250d7370d5f1861");	
-		xmlHttp.open("GET", url, false);
+		xmlHttp.open("GET", url, true);
+		xmlHttp.setRequestHeader("x-key", "88ad38789b858209141ac5699250d7370d5f1861");
+		xmlHttp.setRequestHeader("Origin", document.location);	
 		xmlHttp.send();
+		alert(xmlHttp.responseText);
 
-		x.innerHTML = xmlHttp.responseText;
+		
 	}
 
 	function reverseGeo(position){		
 		var url = "https://zip.getziptastic.com/v3/reverse/" + position.coords.latitude + "/" + position.coords.longitude + "/" + 1000 + "/";
 		makeRequest(url);
 	}
+
 
 	
 </script>
