@@ -3,14 +3,19 @@
 <body>
 
 <p>Ziptastic JavaScript Demo</p>
-
-<button onclick="getLocation()">Reverse Geocoding</button>
-<button onclick="forwardGeocoding()">Forward Geocoding</button>
+<p>--------------------------------</p>
+	Zipcode: <input id="zip" type="text" name="zip"><br><br>
+	<button onclick="forwardGeo()">Forward Geocoding</button>
+<br>
+<br>
+	<button onclick="getLocation()">Reverse Geocoding</button>
+<p>--------------------------------</p>
 
 <p id="demo"></p>
 
-<p id="location"></p>	
+<p id="location"></p>
 
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script language="JavaScript">
 	var x = document.getElementById("demo");
 
@@ -27,20 +32,45 @@
 	    "<br>Longitude: " + position.coords.longitude;
 	}
 
-	function makeRequest(url){
+	function makeRequest(xurl){
 		
-		var xmlHttp = new XMLHttpRequest();
-		xmlHttp.open("GET", url, true);
-		xmlHttp.setRequestHeader("x-key", "88ad38789b858209141ac5699250d7370d5f1861");
-		xmlHttp.setRequestHeader("Origin", document.location);	
-		xmlHttp.send();
-		alert(xmlHttp.responseText);
+		var success = function(position) {
+	    $.ajax({
+	        url: xurl,
+	        type: 'GET',
+	        dataType: 'json',
+	        beforeSend: setHeader
+	    }).done(function(data) {
+	        x.innerHTML = data.toSource();
+	    });
+
+	    function setHeader(xhr) {
+	        xhr.setRequestHeader('x-key', '88ad38789b858209141ac5699250d7370d5f1861');
+	    }
+	  }
+
+	  var error = function(e) {
+	    console.log(e);
+	  }
+
+	  // Check to see if browser supports geolocation.
+	  if (navigator.geolocation) {
+	    navigator.geolocation.getCurrentPosition(success, error);
+	  } else {
+	    error('not supported');
+	  }
 
 		
 	}
 
 	function reverseGeo(position){		
-		var url = "https://zip.getziptastic.com/v3/reverse/" + position.coords.latitude + "/" + position.coords.longitude + "/" + 1000 + "/";
+		var url = "https://zip.getziptastic.com/v3/reverse/" + position.coords.latitude + "/" + position.coords.longitude + "/" + 5000 + "";
+		makeRequest(url);
+	}
+
+	function forwardGeo() {
+		var zipcode = document.getElementById("zip");
+		var url = "https://zip.getziptastic.com/v3/US/" + zipcode.value;
 		makeRequest(url);
 	}
 
