@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<html>
-<body>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"></head><body>
 
 <p>Ziptastic JavaScript Demo</p>
-<p>--------------------------------</p>
-	Zipcode: <input id="zip" type="text" name="zip"><br><br>
+<p>------------------------------------------</p>
+	Zipcode: <input value="42701" kl_virtual_keyboard_secure_input="on" id="zip" name="zip" type="text"><br><br>
 	<button onclick="forwardGeo()">Forward Geocoding</button>
 <br>
 <br>
 	<button onclick="getLocation()">Reverse Geocoding</button>
-<p>--------------------------------</p>
-
-<p id="demo"></p>
-
+<p>------------------------------------------</p>
 <p id="location"></p>
+<p>------------------------------------------</p>
 
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="demo_files/jquery-1.js"></script>
 <script language="JavaScript">
-	var x = document.getElementById("demo");
+	var x = document.getElementById("location");
 
 	function getLocation() {
 	    if (navigator.geolocation) {
@@ -34,14 +32,16 @@
 
 	function makeRequest(xurl){
 		
-		var success = function(position) {
+		var success = function() {
 	    $.ajax({
 	        url: xurl,
 	        type: 'GET',
 	        dataType: 'json',
 	        beforeSend: setHeader
 	    }).done(function(data) {
-	        x.innerHTML = data.toSource();
+	    	var dataX = data.toSource;
+	    	var dataP = JSON.parse(dataX);
+	        x.innerHTML = Object.keys(dataP);
 	    });
 
 	    function setHeader(xhr) {
@@ -78,5 +78,6 @@
 	
 </script>
 
-</body>
-</html>
+
+
+</body></html>
