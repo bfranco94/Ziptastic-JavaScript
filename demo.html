@@ -10,7 +10,7 @@
 <br>
 	<button onclick="getLocation()">Reverse Geocoding</button>
 <p>------------------------------------------</p>
-<p id="location"></p>
+<ul id="location"></ul>
 <p>------------------------------------------</p>
 
 <script src="demo_files/jquery-1.js"></script>
@@ -18,52 +18,38 @@
 	var x = document.getElementById("location");
 
 	function getLocation() {
-	    if (navigator.geolocation) {
-	        navigator.geolocation.getCurrentPosition(reverseGeo);
-	    } else { 
-	        x.innerHTML = "Geolocation is not supported by this browser.";
-	    }
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(reverseGeo);
+		} else {
+			x.innerHTML = "Geolocation is not supported by this browser.";
+		}
 	}
 
 	function showPosition(position) {
-	    x.innerHTML = "Latitude: " + position.coords.latitude + 
-	    "<br>Longitude: " + position.coords.longitude;
+		x.innerHTML = "Latitude: " + position.coords.latitude +
+		"<br>Longitude: " + position.coords.longitude;
 	}
 
 	function makeRequest(xurl){
-		
-		var success = function() {
-	    $.ajax({
-	        url: xurl,
-	        type: 'GET',
-	        dataType: 'json',
-	        beforeSend: setHeader
-	    }).done(function(data) {
-	    	var dataX = data.toSource;
-	    	var dataP = JSON.parse(dataX);
-	        x.innerHTML = Object.keys(dataP);
-	    });
+		console.log("successfuly got location");
+		$.ajax({
+			url: xurl,
+			type: 'GET',
+			dataType: 'json',
+			beforeSend: setHeader
+		}).done(function(data) {
+			$.each(data[0], function(index, value){
+				$(x).append('<li>' + index + ' : ' + value + '</li>')
+			});
+		}).error(function(errdata){ console.log(errdata);
+        });
 
-	    function setHeader(xhr) {
-	        xhr.setRequestHeader('x-key', '88ad38789b858209141ac5699250d7370d5f1861');
-	    }
-	  }
-
-	  var error = function(e) {
-	    console.log(e);
-	  }
-
-	  // Check to see if browser supports geolocation.
-	  if (navigator.geolocation) {
-	    navigator.geolocation.getCurrentPosition(success, error);
-	  } else {
-	    error('not supported');
-	  }
-
-		
+		function setHeader(xhr) {
+			xhr.setRequestHeader('x-key', '88ad38789b858209141ac5699250d7370d5f1861');
+		}
 	}
 
-	function reverseGeo(position){		
+	function reverseGeo(position){
 		var url = "https://zip.getziptastic.com/v3/reverse/" + position.coords.latitude + "/" + position.coords.longitude + "/" + 5000 + "";
 		makeRequest(url);
 	}
@@ -73,11 +59,6 @@
 		var url = "https://zip.getziptastic.com/v3/US/" + zipcode.value;
 		makeRequest(url);
 	}
-
-
-	
 </script>
-
-
 
 </body></html>
